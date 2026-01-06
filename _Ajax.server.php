@@ -10896,8 +10896,10 @@ function producto_inventario($aForm = '')
                         where
                         p.prod_cod_prod     = pr.prbo_cod_prod and
                         pr.prbo_cod_bode     = b.bode_cod_bode and
+                        b.bode_cod_empr      = $idempresa and
                         tp.tpro_cod_tpro     = p.prod_cod_tpro and
                         un.unid_cod_unid     = pr.prbo_cod_unid and
+                        un.unid_cod_empr     = $idempresa and
                         p.prod_cod_empr     = $idempresa and
                         tp.tpro_cod_empr     = $idempresa and
                         p.prod_cod_sucu     = $idsucursal and
@@ -13500,8 +13502,10 @@ function producto_inventario_bal($aForm = '')
                         where
                         p.prod_cod_prod     = pr.prbo_cod_prod and
                         pr.prbo_cod_bode     = b.bode_cod_bode and
+                        b.bode_cod_empr      = $idempresa and
                         tp.tpro_cod_tpro     = p.prod_cod_tpro and
                         un.unid_cod_unid     = pr.prbo_cod_unid and
+                        un.unid_cod_empr     = $idempresa and
                         p.prod_cod_empr     = $idempresa and
                         p.prod_cod_sucu     = $idsucursal and
                         pr.prbo_cod_empr    = $idempresa and
