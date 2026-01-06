@@ -10834,9 +10834,207 @@ function clpv_reporte($aForm = '')
 }
 
 // REPORT PRODCUTO INVETANARIO
+// function producto_inventario($aForm = '')
+// {
+//     global $DSN, $DSN_Ifx;
+//     if (session_status() !== PHP_SESSION_ACTIVE) {
+//         session_start();
+//     }
+
+//     $oIfx = new Dbo();
+//     $oIfx->DSN = $DSN_Ifx;
+//     $oIfx->Conectar();
+
+
+//     $oIfxA = new Dbo();
+//     $oIfxA->DSN = $DSN_Ifx;
+//     $oIfxA->Conectar();
+
+//     $idempresa  = $aForm['empresa'];
+//     $idsucursal = $aForm['sucursal'];
+//     $bode_cod   = $aForm['bodega'];
+//     $prod_nom   = $aForm['producto'];
+
+
+//     $sql_tmp = '';
+//     if (!empty($prod_nom)) {
+//         $sql_tmp = " and ( prod_nom_prod like '%$prod_nom%' or   prod_cod_prod like '%$prod_nom%' ) ";
+//     }
+
+
+//     $oReturn = new xajaxResponse();
+
+//     $sHtml  .= '<div class="modal-dialog modal-lg">
+//                     <div class="modal-content">
+//                         <div class="modal-header">
+//                             <button type="button" class="close" data-dismiss="modal">&times;</button>
+//                             <h4 class="modal-title">PRODUCTOS</h4>
+//                         </div>
+//                         <div class="modal-body">';
+
+//     $sHtml .= ' <table id="tbclientes_prod" class="table table-striped table-condensed table-bordered table-hover" style="width: 98%; margin-top: 20px;" align="center">';
+//     $sHtml .= '<thead>';
+//     $sHtml .= '<tr>
+//                         <td class="fecha_letra">No-</td>
+//                         <td class="fecha_letra" align="center">Bodega</td>
+// 						<td class="fecha_letra" align="center">Codigo</td>
+//                         <td class="fecha_letra" align="center">Producto</td>
+//                         <td class="fecha_letra" align="center">Referencia</td>
+//                         <td class="fecha_letra" align="center">Tipo</td>
+//                         <td class="fecha_letra" align="center">Unidad Medida</td>
+//                         <td class="fecha_letra" align="center">lotes</td>
+//                         <td class="fecha_letra" align="center">Series</td>
+//                         <td class="fecha_letra" align="center">Stock</td>                        
+//                     </tr>';
+//     $sHtml .= '</thead>';
+//     $sHtml .= '<tbody>';
+
+
+//     $sql = "select un.unid_nom_unid, tp.tpro_des_tpro, b.bode_nom_bode, pr.prbo_cod_prod, p.prod_nom_prod, pr.prbo_dis_prod, pr.prbo_cta_inv, pr.prbo_cta_ideb,
+//                         pr.prbo_uco_prod, pr.prbo_iva_porc, prod_lot_sino, prod_ser_prod, prod_cod_barr3
+//                         from saeprbo pr, saeprod p, saebode b, saetpro tp, saeunid un
+//                         where
+//                         p.prod_cod_prod     = pr.prbo_cod_prod and
+//                         pr.prbo_cod_bode     = b.bode_cod_bode and
+//                         tp.tpro_cod_tpro     = p.prod_cod_tpro and
+//                         un.unid_cod_unid     = pr.prbo_cod_unid and
+//                         p.prod_cod_empr     = $idempresa and
+//                         tp.tpro_cod_empr     = $idempresa and
+//                         p.prod_cod_sucu     = $idsucursal and
+//                         pr.prbo_cod_empr    = $idempresa and
+//                         pr.prbo_cod_bode    = '$bode_cod'
+//                         $sql_tmp order by  2 limit 50";
+//     echo $sql;exit;
+
+
+//     // No se hace uso de la vista ya que no actualiza los cambios realizados en el producto
+//     // $sql = "select *from sp_obtener_todos_productos($idempresa , $idsucursal,$bode_cod,500,'$prod_nom');";
+
+//     $i = 1;
+//     $total = 0;
+//     unset($_SESSION['U_PROD_RSC']);
+//     unset($array_tmp);
+//     if ($oIfx->Query($sql)) {
+//         if ($oIfx->NumFilas() > 0) {
+//             do {
+
+//                 $prbo_cod_prod     = ($oIfx->f('prbo_cod_prod'));
+
+//                 $sql_stock = "select  COALESCE( pr.prbo_dis_prod,'0' ) as stock
+//                     from saeprod p, saeprbo pr where
+//                     p.prod_cod_prod = pr.prbo_cod_prod and
+//                     p.prod_cod_empr = $idempresa and
+//                     p.prod_cod_sucu = $idsucursal and
+//                     pr.prbo_cod_empr = $idempresa and
+//                     pr.prbo_cod_bode = $bode_cod and
+//                     p.prod_cod_prod = '$prbo_cod_prod'";
+//                 $stock = consulta_string_func($sql_stock, 'stock', $oIfxA, 0);
+
+
+//                 $nom_bode     = ($oIfx->f('bode_nom_bode'));
+//                 $tipo_prod     = ($oIfx->f('tpro_des_tpro'));
+//                 $detalle_prod     = ($oIfx->f('prod_det_prod'));
+//                 $prod_nom_prod     = htmlentities($oIfx->f('prod_nom_prod'));
+//                 $prbo_dis_prod     = $stock;
+//                 $prbo_cta_inv     = $oIfx->f('prbo_cta_inv');
+//                 $prbo_cta_ideb     = $oIfx->f('prbo_cta_ideb');
+//                 $prbo_uco_prod     = $oIfx->f('prbo_uco_prod');
+//                 $prbo_iva_porc     = $oIfx->f('prbo_iva_porc');
+//                 $unidad_prod     = $oIfx->f('unid_nom_unid');
+//                 $lote             = $oIfx->f('prod_lot_sino');
+//                 $serie             = $oIfx->f('prod_ser_prod');
+//                 $mac             = $oIfx->f('prod_cod_barr3');
+
+//                 $array_tmp[$i] = array(
+//                     $prbo_cod_prod,
+//                     $prod_nom_prod,
+//                     $prbo_cta_inv,
+//                     $prbo_cta_ideb,
+//                     $prbo_uco_prod,
+//                     $prbo_iva_porc,
+//                     $lote,
+//                     $serie
+//                 );
+
+//                 if ($lote == 1 || $lote == 'S') {
+//                     $lote = 'S';
+//                 } else {
+//                     $lote = 'N';
+//                 }
+
+//                 if ($serie == 1 || $serie == 'S') {
+//                     $serie = 'S';
+//                 } else {
+//                     $serie = 'N';
+//                 }
+
+//                 if ($mac == 1 || $mac == 'S') {
+//                     $mac = 'S';
+//                 } else {
+//                     $mac = 'N';
+//                 }
+
+
+//                 $sClass = ($sClass == 'off') ? $sClass = 'on' : $sClass = 'off';
+//                 /*$sHtml .= '<tr height="20" style="cursor: pointer"  
+//                                 onClick="javascript:datos_prod( \'' . $prbo_cod_prod . '\',  \'' . $prod_nom_prod . '\'  , \'' . $prbo_cta_inv . '\'   ,
+//                                                                 \'' . $prbo_cta_ideb . '\' , \'' . $prbo_uco_prod . '\'  , \'' . $prbo_iva_porc . '\' ,
+//                                                                 \'' . $lote . '\',      \'' . $serie . '\' )">';*/
+
+//                 $sHtml .= '<tr  height="20" style="cursor: pointer"  onClick="javascript:datos_prod( \'' . $i . '\' ,
+//                 \'' . $lote . '\',      \'' . $serie . '\',      \'' . $mac . '\'  )" >';
+
+//                 $sHtml .= '<td>' . $i . '</td>';
+//                 $sHtml .= '<td>' . $nom_bode . '</td>';
+//                 $sHtml .= '<td>' . $prbo_cod_prod . '</td>';
+//                 $sHtml .= '<td>' . $prod_nom_prod . '</td>';
+//                 $sHtml .= '<td>' . $detalle_prod . '</td>';
+//                 $sHtml .= '<td>' . $tipo_prod . '</td>';
+//                 $sHtml .= '<td>' . $unidad_prod . '</td>';
+//                 $sHtml .= '<td>' . $lote . '</td>';
+//                 $sHtml .= '<td>' . $serie . '</td>';
+//                 $sHtml .= '<td align="right">' . $prbo_dis_prod . '</td>';
+//                 $sHtml .= '</tr>';
+
+//                 $i++;
+//                 $total += $prbo_dis_prod;
+//             } while ($oIfx->SiguienteRegistro());
+//             $sHtml .= '<tr height="25">';
+//             $sHtml .= '<td></td>';
+//             $sHtml .= '<td align="right"></td>';
+//             $sHtml .= '<td align="right"></td>';
+//             $sHtml .= '<td align="right"></td>';
+//             $sHtml .= '<td align="right"></td>';
+//             $sHtml .= '<td align="right"></td>';
+//             $sHtml .= '<td align="right"></td>';
+//             $sHtml .= '<td align="right"></td>';
+//             $sHtml .= '<td align="right" class="fecha_letra">TOTAL:</td>';
+//             $sHtml .= '<td align="right" class="fecha_letra">' . $total . '</td>';
+//             $sHtml .= '</tr>';
+//         }
+//     }
+
+//     $_SESSION['U_PROD_RSC'] = $array_tmp;
+
+//     $sHtml .= '</tbody>';
+//     $sHtml .= '</table>';
+
+//     $sHtml .= '          </div>
+//                         <div class="modal-footer">
+//                             <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+//                         </div>
+//                     </div>
+//                 </div>
+//              </div>';
+
+//     $oReturn->assign("ModalProd", "innerHTML", $sHtml);
+//     //$oReturn->script("init_prod()");
+//     return $oReturn;
+// }
 function producto_inventario($aForm = '')
 {
-    global $DSN, $DSN_Ifx;
+    global $DSN_Ifx;
+
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
@@ -10845,190 +11043,151 @@ function producto_inventario($aForm = '')
     $oIfx->DSN = $DSN_Ifx;
     $oIfx->Conectar();
 
-
-    $oIfxA = new Dbo();
-    $oIfxA->DSN = $DSN_Ifx;
-    $oIfxA->Conectar();
-
-    $idempresa  = $aForm['empresa'];
-    $idsucursal = $aForm['sucursal'];
-    $bode_cod   = $aForm['bodega'];
-    $prod_nom   = $aForm['producto'];
-
+    $idempresa  = (int)$aForm['empresa'];
+    $idsucursal = (int)$aForm['sucursal'];
+    $bode_cod   = trim($aForm['bodega']);
+    $prod_nom   = trim($aForm['producto']);
 
     $sql_tmp = '';
-    if (!empty($prod_nom)) {
-        $sql_tmp = " and ( prod_nom_prod like '%$prod_nom%' or   prod_cod_prod like '%$prod_nom%' ) ";
+    if ($prod_nom !== '') {
+        $prod_nom = addslashes($prod_nom);
+        $sql_tmp = " AND ( p.prod_nom_prod LIKE '%$prod_nom%' 
+                           OR p.prod_cod_prod LIKE '%$prod_nom%' ) ";
     }
-
 
     $oReturn = new xajaxResponse();
 
-    $sHtml  .= '<div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">PRODUCTOS</h4>
-                        </div>
-                        <div class="modal-body">';
+    $sHtml = '
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">PRODUCTOS</h4>
+            </div>
+            <div class="modal-body">';
 
-    $sHtml .= ' <table id="tbclientes_prod" class="table table-striped table-condensed table-bordered table-hover" style="width: 98%; margin-top: 20px;" align="center">';
-    $sHtml .= '<thead>';
-    $sHtml .= '<tr>
-                        <td class="fecha_letra">No-</td>
-                        <td class="fecha_letra" align="center">Bodega</td>
-						<td class="fecha_letra" align="center">Codigo</td>
-                        <td class="fecha_letra" align="center">Producto</td>
-                        <td class="fecha_letra" align="center">Referencia</td>
-                        <td class="fecha_letra" align="center">Tipo</td>
-                        <td class="fecha_letra" align="center">Unidad Medida</td>
-                        <td class="fecha_letra" align="center">lotes</td>
-                        <td class="fecha_letra" align="center">Series</td>
-                        <td class="fecha_letra" align="center">Stock</td>                        
-                    </tr>';
-    $sHtml .= '</thead>';
-    $sHtml .= '<tbody>';
+    $sHtml .= '
+    <table id="tbclientes_prod" class="table table-striped table-condensed table-bordered table-hover" style="width:98%; margin-top:20px;">
+        <thead>
+            <tr>
+                <td>No</td>
+                <td>Bodega</td>
+                <td>Código</td>
+                <td>Producto</td>
+                <td>Referencia</td>
+                <td>Tipo</td>
+                <td>Unidad</td>
+                <td>Lotes</td>
+                <td>Series</td>
+                <td>Stock</td>
+            </tr>
+        </thead>
+        <tbody>';
 
+    $sql = "
+    SELECT
+        un.unid_nom_unid,
+        tp.tpro_des_tpro,
+        b.bode_nom_bode,
+        pr.prbo_cod_prod,
+        p.prod_nom_prod,
+        pr.prbo_dis_prod,
+        pr.prbo_cta_inv,
+        pr.prbo_cta_ideb,
+        pr.prbo_uco_prod,
+        pr.prbo_iva_porc,
+        p.prod_lot_sino,
+        p.prod_ser_prod,
+        p.prod_cod_barr3
+    FROM saeprbo pr
+    JOIN saeprod p
+        ON p.prod_cod_prod = pr.prbo_cod_prod
+       AND p.prod_cod_empr = pr.prbo_cod_empr
+       AND p.prod_cod_sucu = $idsucursal
+    JOIN saetpro tp
+        ON tp.tpro_cod_tpro = p.prod_cod_tpro
+       AND tp.tpro_cod_empr = p.prod_cod_empr
+    JOIN saebode b
+        ON b.bode_cod_bode = pr.prbo_cod_bode
+       AND b.bode_cod_empr = pr.prbo_cod_empr
+    JOIN saeunid un
+        ON un.unid_cod_unid = pr.prbo_cod_unid
+       AND un.unid_cod_empr = pr.prbo_cod_empr
+    WHERE pr.prbo_cod_empr = $idempresa
+      AND pr.prbo_cod_bode = '$bode_cod'
+      $sql_tmp
+    ORDER BY p.prod_nom_prod
+    LIMIT 50";
 
-    $sql = "select un.unid_nom_unid, tp.tpro_des_tpro, b.bode_nom_bode, pr.prbo_cod_prod, p.prod_nom_prod, pr.prbo_dis_prod, pr.prbo_cta_inv, pr.prbo_cta_ideb,
-                        pr.prbo_uco_prod, pr.prbo_iva_porc, prod_lot_sino, prod_ser_prod, prod_cod_barr3
-                        from saeprbo pr, saeprod p, saebode b, saetpro tp, saeunid un
-                        where
-                        p.prod_cod_prod     = pr.prbo_cod_prod and
-                        pr.prbo_cod_bode     = b.bode_cod_bode and
-                        tp.tpro_cod_tpro     = p.prod_cod_tpro and
-                        un.unid_cod_unid     = pr.prbo_cod_unid and
-                        p.prod_cod_empr     = $idempresa and
-                        tp.tpro_cod_empr     = $idempresa and
-                        p.prod_cod_sucu     = $idsucursal and
-                        pr.prbo_cod_empr    = $idempresa and
-                        pr.prbo_cod_bode    = '$bode_cod'
-                        $sql_tmp order by  2 limit 50";
-
-
-
-    // No se hace uso de la vista ya que no actualiza los cambios realizados en el producto
-    // $sql = "select *from sp_obtener_todos_productos($idempresa , $idsucursal,$bode_cod,500,'$prod_nom');";
-
-    $i = 1;
-    $total = 0;
-    unset($_SESSION['U_PROD_RSC']);
-    unset($array_tmp);
     if ($oIfx->Query($sql)) {
-        if ($oIfx->NumFilas() > 0) {
-            do {
+        $i = 1;
+        $total = 0;
+        unset($_SESSION['U_PROD_RSC']);
+        $array_tmp = [];
 
-                $prbo_cod_prod     = ($oIfx->f('prbo_cod_prod'));
+        do {
+            $prbo_cod_prod = $oIfx->f('prbo_cod_prod');
+            $prod_nom_prod = htmlentities($oIfx->f('prod_nom_prod'));
+            $nom_bode      = $oIfx->f('bode_nom_bode');
+            $tipo_prod     = $oIfx->f('tpro_des_tpro');
+            $unidad_prod   = $oIfx->f('unid_nom_unid');
+            $stock         = (float)$oIfx->f('prbo_dis_prod');
 
-                $sql_stock = "select  COALESCE( pr.prbo_dis_prod,'0' ) as stock
-                    from saeprod p, saeprbo pr where
-                    p.prod_cod_prod = pr.prbo_cod_prod and
-                    p.prod_cod_empr = $idempresa and
-                    p.prod_cod_sucu = $idsucursal and
-                    pr.prbo_cod_empr = $idempresa and
-                    pr.prbo_cod_bode = $bode_cod and
-                    p.prod_cod_prod = '$prbo_cod_prod'";
-                $stock = consulta_string_func($sql_stock, 'stock', $oIfxA, 0);
+            $lote  = ($oIfx->f('prod_lot_sino') == 1 || $oIfx->f('prod_lot_sino') == 'S') ? 'S' : 'N';
+            $serie = ($oIfx->f('prod_ser_prod') == 1 || $oIfx->f('prod_ser_prod') == 'S') ? 'S' : 'N';
+            $mac   = ($oIfx->f('prod_cod_barr3') == 1 || $oIfx->f('prod_cod_barr3') == 'S') ? 'S' : 'N';
 
+            $array_tmp[$i] = [
+                $prbo_cod_prod,
+                $prod_nom_prod,
+                $oIfx->f('prbo_cta_inv'),
+                $oIfx->f('prbo_cta_ideb'),
+                $oIfx->f('prbo_uco_prod'),
+                $oIfx->f('prbo_iva_porc'),
+                $lote,
+                $serie
+            ];
 
-                $nom_bode     = ($oIfx->f('bode_nom_bode'));
-                $tipo_prod     = ($oIfx->f('tpro_des_tpro'));
-                $detalle_prod     = ($oIfx->f('prod_det_prod'));
-                $prod_nom_prod     = htmlentities($oIfx->f('prod_nom_prod'));
-                $prbo_dis_prod     = $stock;
-                $prbo_cta_inv     = $oIfx->f('prbo_cta_inv');
-                $prbo_cta_ideb     = $oIfx->f('prbo_cta_ideb');
-                $prbo_uco_prod     = $oIfx->f('prbo_uco_prod');
-                $prbo_iva_porc     = $oIfx->f('prbo_iva_porc');
-                $unidad_prod     = $oIfx->f('unid_nom_unid');
-                $lote             = $oIfx->f('prod_lot_sino');
-                $serie             = $oIfx->f('prod_ser_prod');
-                $mac             = $oIfx->f('prod_cod_barr3');
+            $sHtml .= "
+            <tr style='cursor:pointer' 
+                onclick=\"datos_prod('$i','$lote','$serie','$mac')\">
+                <td>$i</td>
+                <td>$nom_bode</td>
+                <td>$prbo_cod_prod</td>
+                <td>$prod_nom_prod</td>
+                <td></td>
+                <td>$tipo_prod</td>
+                <td>$unidad_prod</td>
+                <td>$lote</td>
+                <td>$serie</td>
+                <td align='right'>$stock</td>
+            </tr>";
 
-                $array_tmp[$i] = array(
-                    $prbo_cod_prod,
-                    $prod_nom_prod,
-                    $prbo_cta_inv,
-                    $prbo_cta_ideb,
-                    $prbo_uco_prod,
-                    $prbo_iva_porc,
-                    $lote,
-                    $serie
-                );
+            $total += $stock;
+            $i++;
 
-                if ($lote == 1 || $lote == 'S') {
-                    $lote = 'S';
-                } else {
-                    $lote = 'N';
-                }
+        } while ($oIfx->SiguienteRegistro());
 
-                if ($serie == 1 || $serie == 'S') {
-                    $serie = 'S';
-                } else {
-                    $serie = 'N';
-                }
-
-                if ($mac == 1 || $mac == 'S') {
-                    $mac = 'S';
-                } else {
-                    $mac = 'N';
-                }
-
-
-                $sClass = ($sClass == 'off') ? $sClass = 'on' : $sClass = 'off';
-                /*$sHtml .= '<tr height="20" style="cursor: pointer"  
-                                onClick="javascript:datos_prod( \'' . $prbo_cod_prod . '\',  \'' . $prod_nom_prod . '\'  , \'' . $prbo_cta_inv . '\'   ,
-                                                                \'' . $prbo_cta_ideb . '\' , \'' . $prbo_uco_prod . '\'  , \'' . $prbo_iva_porc . '\' ,
-                                                                \'' . $lote . '\',      \'' . $serie . '\' )">';*/
-
-                $sHtml .= '<tr  height="20" style="cursor: pointer"  onClick="javascript:datos_prod( \'' . $i . '\' ,
-                \'' . $lote . '\',      \'' . $serie . '\',      \'' . $mac . '\'  )" >';
-
-                $sHtml .= '<td>' . $i . '</td>';
-                $sHtml .= '<td>' . $nom_bode . '</td>';
-                $sHtml .= '<td>' . $prbo_cod_prod . '</td>';
-                $sHtml .= '<td>' . $prod_nom_prod . '</td>';
-                $sHtml .= '<td>' . $detalle_prod . '</td>';
-                $sHtml .= '<td>' . $tipo_prod . '</td>';
-                $sHtml .= '<td>' . $unidad_prod . '</td>';
-                $sHtml .= '<td>' . $lote . '</td>';
-                $sHtml .= '<td>' . $serie . '</td>';
-                $sHtml .= '<td align="right">' . $prbo_dis_prod . '</td>';
-                $sHtml .= '</tr>';
-
-                $i++;
-                $total += $prbo_dis_prod;
-            } while ($oIfx->SiguienteRegistro());
-            $sHtml .= '<tr height="25">';
-            $sHtml .= '<td></td>';
-            $sHtml .= '<td align="right"></td>';
-            $sHtml .= '<td align="right"></td>';
-            $sHtml .= '<td align="right"></td>';
-            $sHtml .= '<td align="right"></td>';
-            $sHtml .= '<td align="right"></td>';
-            $sHtml .= '<td align="right"></td>';
-            $sHtml .= '<td align="right"></td>';
-            $sHtml .= '<td align="right" class="fecha_letra">TOTAL:</td>';
-            $sHtml .= '<td align="right" class="fecha_letra">' . $total . '</td>';
-            $sHtml .= '</tr>';
-        }
+        $sHtml .= "
+        <tr>
+            <td colspan='9' align='right'><strong>TOTAL</strong></td>
+            <td align='right'><strong>$total</strong></td>
+        </tr>";
     }
 
     $_SESSION['U_PROD_RSC'] = $array_tmp;
 
-    $sHtml .= '</tbody>';
-    $sHtml .= '</table>';
-
-    $sHtml .= '          </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-             </div>';
+    $sHtml .= '
+        </tbody>
+    </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+    </div>
+    </div>
+    </div>';
 
     $oReturn->assign("ModalProd", "innerHTML", $sHtml);
-    //$oReturn->script("init_prod()");
     return $oReturn;
 }
 
